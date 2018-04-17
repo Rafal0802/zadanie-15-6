@@ -5,11 +5,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Stopwatch = function () {
-    function Stopwatch(display) {
+    function Stopwatch(display, results) {
         _classCallCheck(this, Stopwatch);
 
         this.running = false;
         this.display = display;
+        this.results = results;
         this.reset();
         this.print(this.times);
     }
@@ -71,6 +72,31 @@ var Stopwatch = function () {
             this.running = false;
             clearInterval(this.watch);
         }
+    }, {
+        key: 'resetTimes',
+        value: function resetTimes() {
+            this.reset();
+            this.print();
+        }
+    }, {
+        key: 'save',
+        value: function save() {
+            var currentCounterValue = this.format(this.times),
+                liElement = document.createElement('li');
+
+            liElement.innerText = currentCounterValue;
+            this.results.appendChild(liElement);
+        }
+    }, {
+        key: 'clearList',
+        value: function clearList() {
+            this.results.innerText = '';
+        }
+    }, {
+        key: 'clear',
+        value: function clear() {
+            this.results.removeChild(this.results.lastChild);
+        }
     }]);
 
     return Stopwatch;
@@ -84,7 +110,7 @@ function pad0(value) {
     return result;
 }
 
-var stopwatch = new Stopwatch(document.querySelector('.stopwatch'));
+var stopwatch = new Stopwatch(document.querySelector('.stopwatch'), document.getElementById('results'));
 
 var startButton = document.getElementById('start');
 startButton.addEventListener('click', function () {
@@ -98,5 +124,20 @@ stopButton.addEventListener('click', function () {
 
 var resetButton = document.getElementById('reset');
 resetButton.addEventListener('click', function () {
-    stopwatch.reset(), stopwatch.print(), stopwatch.format();
+    return stopwatch.resetTimes();
+});
+
+var saveButton = document.getElementById('save');
+saveButton.addEventListener('click', function () {
+    return stopwatch.save();
+});
+
+var clearButton = document.getElementById('clear');
+clearButton.addEventListener('click', function () {
+    return stopwatch.clear();
+});
+
+var clearListButton = document.getElementById('clear-list');
+clearListButton.addEventListener('click', function () {
+    return stopwatch.clearList();
 });
